@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "kosts-api",
+    "database": "db_tokoonline",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

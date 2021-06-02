@@ -8,6 +8,8 @@ const path = require('path');
 const AuthRoutes = require('./routes/auth-routes');
 const DormRoutes = require('./routes/dorm-routes');
 const BookRoutes = require('./routes/book-routes')
+const ProductRoutes = require('./routes/product-routes');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +21,7 @@ app.use(express.static('public'))
 app.use(AuthRoutes);
 app.use(DormRoutes);
 app.use(BookRoutes);
+app.use(ProductRoutes);
 
 
 app.listen(PORT, (err) => {
