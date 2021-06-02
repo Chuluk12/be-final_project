@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.INTEGER,
     stock: DataTypes.INTEGER
   }, {});
+
+  ///
 //   booking.associate = function(models) {
 //     // associations can be defined here
 
