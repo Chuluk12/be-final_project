@@ -7,6 +7,7 @@ const { user } = require('../models');
 exports.register = async (req, res) => {
     const err = validationResult(req);
 
+    
     if (!err.isEmpty()) {
         return errorHandler(res, 422, 'Error Input', err.errors);
     }
