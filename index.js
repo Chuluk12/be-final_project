@@ -6,6 +6,7 @@ const paginate = require("express-paginate");
 
 const AuthRoutes = require("./routes/auth-routes");
 const ProductRoutes = require("./routes/product-routes");
+const TransactionRoutes = require("./routes/transaction-routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 app.use(AuthRoutes);
 app.use(ProductRoutes);
+app.use(TransactionRoutes);
 
 app.listen(PORT, (err) => {
   if (err) throw err;

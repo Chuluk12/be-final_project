@@ -11,7 +11,7 @@ app.group("/api/v1/products", (router) => {
   router.post("/", upload.array("image", 5), ProductController.store);
   router.get("/", ProductController.getall);
   router.get("/:id", ProductController.getone);
-  router.put("/:id", ProductController.update);
+  router.put("/:id", upload.array("image", 5), ProductController.update);
   router.delete("/:id", ProductController.destroy);
 });
 

@@ -41,7 +41,7 @@ exports.store = async (req, res) => {
 
   const addProduct = await product.create({
     nama_produk: req.body.nama_produk,
-    deskripsi: req.body.nama_produk,
+    deskripsi: req.body.deskripsi,
     price: req.body.price,
     stock: req.body.stock,
     image: images.toString(),
@@ -96,7 +96,7 @@ exports.getone = async (req, res) => {
   const { id } = req.params;
 
   const getProduct = product.findOne({
-    attributes: ["nama_produk", "price", "stock", "deskripsi"],
+    attributes: ["nama_produk", "price", "stock", "deskripsi", "image"],
     where: {
       id,
     },
@@ -112,6 +112,19 @@ exports.getone = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params;
+  console.log(id)
+  console.log(req.files)
+  const filesUpload = req.files;
+
+  let images = [];
+
+  if(filesUpload.length) {
+    filesUpload.map((item) => {
+      images.push(`uploads/${item.filename}`)
+    })
+  } else {
+    images.push(`uploads/no-image.png`)
+  }
 
   const Schema = {
     nama_produk: "string|empty:false",
@@ -132,9 +145,10 @@ exports.update = async (req, res) => {
   const updateProduct = await product.update(
     {
       nama_produk: req.body.nama_produk,
-      deskripsi: req.body.nama_produk,
-      price: req.body.price,
-      stock: req.body.stock,
+      deskripsi: req.body.deskripsi,
+      price: parseInt(req.body.price),
+      stock: parseInt(req.body.stock),
+      image: images.toString(),
     },
     {
       where: {
@@ -160,7 +174,7 @@ exports.destroy = async (req, res) => {
 
   const deleteProduct = product.destroy({
     where: {
-      id: req.params.id,
+      id: req.params.id
     },
   });
 
