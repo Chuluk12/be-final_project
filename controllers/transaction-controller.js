@@ -13,31 +13,32 @@ exports.store = async (req, res) => {
     // id digenerate uuid
     // user_id nanti kita kirim, status
 
-    const Schema = {
-        user_id: "string|empty:false",
-        status: "number|empty:false",
-      };
+    // const Schema = {
+    //     user_id: "string|empty:false",
+    //     status: "number|empty:false",
+    //   };
 
-      const validate = v.validate(req.body, Schema);
+    //   const validate = v.validate(req.body, Schema);
 
-      if (validate.length) {
-        return res.status(400).json({
-          status: "error",
-          message: validate,
-        });
-      }
+    //   if (validate.length) {
+    //     return res.status(400).json({
+    //       status: "error",
+    //       message: validate,
+    //     });
+    //   }
 
-      console.log(req.body)
-      const addTransaction = await transaction.create({
-        user_id: req.body.user_id,
-        status: req.body.status,
-        transaction_id: uuid.v4(),
-      });
+    //   console.log(req.body)
+    //   const addTransaction = await transaction.create({
+    //     user_id: req.body.user_id,
+    //     status: req.body.status,
+    //     transaction_id: uuid.v4(),
+    //   });
     
-      return res.status(201).json({
-        status: "success",
-        data: addTransaction,
-      });
+    //   return res.status(201).json({
+    //     status: "success",
+    //     data: addTransaction,
+    //   });
+    console.log(req.body);
 
     
 }
