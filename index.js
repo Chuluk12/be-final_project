@@ -9,7 +9,7 @@ const ProductRoutes = require("./routes/product-routes");
 const TransactionRoutes = require("./routes/transaction-routes");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5100;
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

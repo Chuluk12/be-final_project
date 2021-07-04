@@ -16,6 +16,7 @@ exports.store = async (req, res) => {
    
     const { products } = req.body;
 
+<<<<<<< HEAD
     const Schema = {
           user_id: "string|empty:false",
           products: "array|min:1",
@@ -32,6 +33,50 @@ exports.store = async (req, res) => {
       }
 
       console.log(req.body)
+=======
+    // const Schema = {
+    //     user_id: "string|empty:false",
+    //     status: "number|empty:false",
+    //   };
+
+    //   const validate = v.validate(req.body, Schema);
+
+    //   if (validate.length) {
+    //     return res.status(400).json({
+    //       status: "error",
+    //       message: validate,
+    //     });
+    //   }
+
+    //   console.log(req.body)
+    //   const addTransaction = await transaction.create({
+    //     user_id: req.body.user_id,
+    //     status: req.body.status,
+    //     transaction_id: uuid.v4(),
+    //   });
+    
+    //   return res.status(201).json({
+    //     status: "success",
+    //     data: addTransaction,
+    //   });
+    console.log(req.body);
+
+    
+}
+
+
+
+exports.getById = async (req, res) => {
+    
+    
+    // kita tangkap paramater
+    // kalo ada idnya kita balikkin orderannya sesuai yang punya siapa
+    console.log(req.query)
+
+    const Schema = {
+        user_id: "string|empty:false",
+      };
+>>>>>>> cfa80d1088065998b523e828d081ec13cf2c973f
 
       try {
         const addTransaction = await transaction.create({
