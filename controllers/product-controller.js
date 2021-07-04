@@ -96,7 +96,7 @@ exports.getone = async (req, res) => {
   const { id } = req.params;
 
   const getProduct = product.findOne({
-    attributes: ["nama_produk", "price", "stock", "deskripsi", "image"],
+    attributes: ["id", "nama_produk", "price", "stock", "deskripsi", "image"],
     where: {
       id,
     },

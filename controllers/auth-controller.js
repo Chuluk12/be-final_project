@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
 
     try {
         let userData = await user.create(
-            {...req.body, password: passwordHashed,id:uuid.v4()}
+            {...req.body, password: passwordHashed, id: uuid.v4()}
             // Object.assign(req.body, {password: passwordHashed})
         );
         if (userData) {

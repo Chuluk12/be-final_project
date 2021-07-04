@@ -1,7 +1,7 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const transaction_detail = sequelize.define(
-    "transaction_detail",
+  const transaction_details = sequelize.define(
+    "transaction_details",
     {
       
       id: {
@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       totalPrice: DataTypes.INTEGER
     },
     {
-        tableName: 'transaction_detail',
+        tableName: 'transaction_details',
     }
   );
  
-  return transaction_detail;
+  return transaction_details;
 };

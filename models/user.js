@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
+  user.associate = function(models) {
+    user.hasMany(models.transaction, {
+      as: 'transactionList',
+      foreignKey: 'user_id'
+    });
+  };
 
   user.authenticate = async (email, password) => {
     const userData = await user.findOne({ where: { email } });
@@ -30,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     const token = await jwt.sign({ userId }, "#$et@$^asfq$%$b^^^qtat$");
     const userData = await user.findOne({
       where: { id: userId },
-      attributes: ["nama_lengkap", "email"],
+      attributes: ["nama_lengkap", "email", "id"],
     });
 
     return { userData, token };

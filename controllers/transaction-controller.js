@@ -3,19 +3,23 @@ const { validationResult } = require('express-validator');
 const Validator = require("fastest-validator");
 const uuid = require("uuid");
 const errorHandler = require('../middleware/error_handler');
-const { transaction, user, transaction_detail, product } = require('../models');
+const { transaction, user, transaction_details, product } = require('../models');
 
+
+// transaction.hasMany(transaction_details, {
+//   foreignKey: 'transaction_id'
+// });
 
 const v = new Validator();
 exports.store = async (req, res) => {
     
-    // kita butuh id, user_id, status
-    // id digenerate uuid
-    // user_id nanti kita kirim, status
+   
+    const { products } = req.body;
 
     const Schema = {
-        user_id: "string|empty:false",
-        status: "number|empty:false",
+          user_id: "string|empty:false",
+          products: "array|min:1",
+          status: "number|empty:false",
       };
 
       const validate = v.validate(req.body, Schema);
@@ -28,99 +32,57 @@ exports.store = async (req, res) => {
       }
 
       console.log(req.body)
-      const addTransaction = await transaction.create({
-        user_id: req.body.user_id,
-        status: req.body.status,
-        transaction_id: uuid.v4(),
-      });
-    
-      return res.status(201).json({
-        status: "success",
-        data: addTransaction,
-      });
 
-    
+      try {
+        const addTransaction = await transaction.create({
+          user_id: req.body.user_id,
+          status: req.body.status,
+          transaction_id: uuid.v4(),
+        });
+        if (addTransaction) {
+          const transaction_detail_data = await products.map( async (item) => {
+            let data_list = [];
+            await transaction_details.create({
+          
+                product_id: item.id,
+                transaction_id: addTransaction.transaction_id,
+                qty: item.quantity,
+                price: item.price,
+                totalPrice: item.quantity * item.price,
+                id: uuid.v4()
+            }).then(data => data_list.push(data));
+
+          })
+          
+          return res.status(201).json({
+            status: "success",
+            data: addTransaction,
+            data_detail: transaction_detail_data
+          }); 
+        }
+      } catch (err) {
+          return errorHandler(res, 500, 'Internal Server Error', err);
+      }
 }
-
-
 
 exports.getById = async (req, res) => {
-    
-    
-    // kita tangkap paramater
-    // kalo ada idnya kita balikkin orderannya sesuai yang punya siapa
-    console.log(req.query)
-
-    const Schema = {
-        user_id: "string|empty:false",
-      };
-
-      const validate = v.validate(req.query, Schema);
-
-      if (validate.length) {
-        return res.status(400).json({
-          status: "error",
-          message: validate,
-        });
-      }
-
-      console.log(req.body)
-      const TransactionByUser = await transaction.findAll({where: {
-          user_id: req.query.user_id
-      }})
-
-      const dataUser = await user.findOne({ where: {
-          id: req.query.user_id
-      }})
-
-      console.log(dataUser)
-      console.log(TransactionByUser)
-      let finalTransactionData = []
-
-      if(TransactionByUser){
-        TransactionByUser.map((item, index) => {
-            
-            let statusOrder
-            if(item.status == 1){
-                statusOrder = "Belum Dibayar"
-            } else if(item.status == 2) {
-                statusOrder = "Sudah Dibayar"
-            } else if(item.status == 3) {
-                statusOrder = "Belum Dikirim"
-            } else if(item.status == 4) {
-                statusOrder = "Sudah Dikirim"
-            } else if(item.status == 5) {
-                statusOrder = "Sudah Diterima"
-            } else {
-                statusOrder = "status Tidak Diketahui"
-            }
-            
-            finalTransactionData.push({
-                transaction_id: item.transaction_id,
-                user_id: item.user_id,
-                nama_lengkap: dataUser.nama_lengkap,
-                email: dataUser.email,
-                status: statusOrder,
-                createdAt: item.createdAt,
-                updatedAt: item.updatedAt
-            })
-          })
-      } 
-
-
+   
+      const { id } = req.params 
+      const TransactionByUser = await transaction.findAll({
+          where: {
+            user_id: id,
+            // transaction_id: id
+          },
+          include: transaction_details
+        })
+     
       return res.status(201).json({
         status: "success",
-        data: finalTransactionData,
+        data: TransactionByUser,
       });
-
-    
 }
 
-
 exports.getByIdTransaction = async (req, res) => {
-
- // kita tangkap paramater
-    // kalo ada idnya kita balikkin orderannya sesuai yang punya siapa
     console.log(req.query)
 
     const Schema = {
@@ -135,8 +97,6 @@ exports.getByIdTransaction = async (req, res) => {
           message: validate,
         });
       }
-
-      // temukan semua item
       let detailTransaction = await transaction_detail.findAll({
           where : {
             transaction_id: req.query.transaction_id
@@ -144,8 +104,6 @@ exports.getByIdTransaction = async (req, res) => {
       })
 
       let item = [], transaction_data
-
-      // temukan detail transaksi
       const transactionData = await transaction.findOne({where: {
         transaction_id : req.query.transaction_id
       }})
@@ -181,11 +139,8 @@ exports.getByIdTransaction = async (req, res) => {
           status: statusOrder
       }
 
-      // cetak detail transaction
-
       if(detailTransaction){
          detailTransaction.map((data, index) => {
-
                 item.push({    
                     qty: data.qty,
                     price: data.price,
@@ -193,7 +148,6 @@ exports.getByIdTransaction = async (req, res) => {
                 })
          })
       }
-
       return res.status(200).json({
         status: "success",
         data: {
@@ -201,18 +155,4 @@ exports.getByIdTransaction = async (req, res) => {
             item
         }
       });
-
  }
-
- const getDataProduk = async (produk) => {
-
-       const data = await product.findOne({
-           where: {
-               id: produk
-           }
-       })
-
-       console.log(data)
-       return data
- }
-

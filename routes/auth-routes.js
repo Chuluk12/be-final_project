@@ -12,5 +12,4 @@ app.group('/api/v1', router => {
     router.post('/login', validator.login, AuthController.login);
 })
 
-
 module.exports = app;

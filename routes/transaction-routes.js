@@ -8,7 +8,7 @@ const TransactionController = require("../controllers/transaction-controller");
 
 app.group("/api/v1/transaction", (router) => {
   router.post("/", TransactionController.store);
-  router.get("/", TransactionController.getById)
+  router.get("/:id", TransactionController.getById)
   router.get("/detail", TransactionController.getByIdTransaction)
 });
 
